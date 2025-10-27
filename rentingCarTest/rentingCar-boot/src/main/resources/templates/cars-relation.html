@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Car Rental System - Relations</title>
+</head>
+<body class="w3-light-grey">
+
+<div class="w3-container">
+
+    <div class="w3-center w3-margin-bottom">
+        <h1 class="w3-text-blue">Spring Boot Car Rental System - Cars with Relations</h1>
+        <h5 class="w3-text-grey">Table of cars with Insurance Companies and Car Extras from @Controller @Service @Repository and H2 DB</h5>
+    </div>
+
+    <div th:each="car:${cars}" class="w3-card-4 w3-margin w3-pale-blue w3-border w3-border-blue">
+        
+        <!-- Car Information -->
+        <div class="w3-container w3-pale-blue w3-border-left w3-border-blue w3-margin-bottom">
+            <h3 class="w3-margin-top w3-text-blue">🚗 Car Details</h3>
+            <table class="w3-table w3-striped w3-white">
+                <tr>
+                    <td class="w3-text-black"><b>Car ID:</b></td>
+                    <td class="w3-text-dark-grey" th:text="${car.id}"></td>
+                    <td class="w3-text-black"><b>Brand:</b></td>
+                    <td class="w3-text-dark-grey" th:text="${car.brand}"></td>
+                </tr>
+                <tr>
+                    <td class="w3-text-black"><b>Model:</b></td>
+                    <td class="w3-text-dark-grey" th:text="${car.model}"></td>
+                    <td class="w3-text-black"><b>Plate:</b></td>
+                    <td class="w3-text-dark-grey" th:text="${car.plate}"></td>
+                </tr>
+                <tr>
+                    <td class="w3-text-black"><b>Year:</b></td>
+                    <td class="w3-text-dark-grey" th:text="${car.year}"></td>
+                    <td class="w3-text-black"><b>Price/Day:</b></td>
+                    <td class="w3-text-dark-grey" th:text="${car.price} + '€'"></td>
+                </tr>
+                <tr>
+                    <td class="w3-text-black"><b>Age:</b></td>
+                    <td class="w3-text-dark-grey" th:text="${car.carAge()} + ' years'"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            
+            <!-- Car Actions -->
+            <div class="w3-margin-top w3-margin-bottom">
+                <a th:href="@{deleteCar(carIdFromView=${car.id})}" class="w3-button w3-red w3-margin-right">Delete</a>
+                <a th:href="@{updateCar(carIdFromView=${car.id})}" class="w3-button w3-blue w3-margin-right">Update</a>
+                <a th:href="@{detailCar(carIdFromView=${car.id})}" class="w3-button w3-green">Detail</a>
+            </div>
+        </div>
+
+        <!-- Related Entities Container -->
+        <div class="w3-container w3-margin-left">
+            <div class="w3-row">
+                <div class="w3-col l1 m1 s1">
+                    <div class="w3-border-left w3-border-grey" style="height: 100%; margin-left: 20px;"></div>
+                </div>
+                <div class="w3-col l11 m11 s11">
+                    
+                    <!-- Insurance Company Information -->
+                    <div class="w3-card w3-pale-yellow w3-border-left w3-border-orange w3-margin-bottom w3-margin-left">
+                        <div class="w3-container">
+                            <h4 class="w3-margin-top w3-text-orange">├── 🛡️ Insurance Company</h4>
+                            <div th:if="${car.inssuranceCia != null}">
+                                <table class="w3-table w3-striped w3-white">
+                                    <tr>
+                                        <td class="w3-text-black"><b>Company ID:</b></td>
+                                        <td class="w3-text-dark-grey" th:text="${car.inssuranceCia.id}"></td>
+                                        <td class="w3-text-black"><b>Company Name:</b></td>
+                                        <td class="w3-text-dark-grey" th:text="${car.inssuranceCia.name}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w3-text-black"><b>Description:</b></td>
+                                        <td class="w3-text-dark-grey" th:text="${car.inssuranceCia.description}" colspan="3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w3-text-black"><b>Employees:</b></td>
+                                        <td class="w3-text-dark-grey" th:text="${car.inssuranceCia.qtyEmployee}"></td>
+                                        <td class="w3-text-black"><b>Active:</b></td>
+                                        <td>
+                                            <span th:if="${car.inssuranceCia.active}" class="w3-text-green"><b>✅ Yes</b></span>
+                                            <span th:unless="${car.inssuranceCia.active}" class="w3-text-red"><b>❌ No</b></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div th:unless="${car.inssuranceCia != null}">
+                                <p class="w3-text-grey"><i>No insurance company assigned</i></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Car Extras Information -->
+                    <div class="w3-card w3-pale-blue w3-border-left w3-border-blue w3-margin-bottom w3-margin-left">
+                        <div class="w3-container">
+                            <h4 class="w3-margin-top w3-text-blue">└── 🔧 Car Extras</h4>
+                            <div th:if="${car.carExtras != null and !car.carExtras.isEmpty()}">
+                                <table class="w3-table-all w3-hoverable w3-white">
+                                    <thead>
+                                        <tr class="w3-light-blue">
+                                            <th class="w3-text-black">Extra ID</th>
+                                            <th class="w3-text-black">Name</th>
+                                            <th class="w3-text-black">Description</th>
+                                            <th class="w3-text-black">Category</th>
+                                            <th class="w3-text-black">Daily Price</th>
+                                            <th class="w3-text-black">Available</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="extra : ${car.carExtras}">
+                                            <td class="w3-text-dark-grey" th:text="${extra.id}"></td>
+                                            <td class="w3-text-dark-grey" th:text="${extra.name}"></td>
+                                            <td class="w3-text-dark-grey" th:text="${extra.description}"></td>
+                                            <td class="w3-text-dark-grey" th:text="${extra.category}"></td>
+                                            <td class="w3-text-dark-grey" th:text="${extra.dailyPrice} + '€'"></td>
+                                            <td>
+                                                <span th:if="${extra.available}" class="w3-text-green"><b>✅ Available</b></span>
+                                                <span th:unless="${extra.available}" class="w3-text-red"><b>❌ Not Available</b></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div th:unless="${car.carExtras != null and !car.carExtras.isEmpty()}">
+                                <p class="w3-text-grey"><i>No extras available for this car</i></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="w3-center w3-margin-top">
+        <a th:href="@{/cars/newCar}" class="w3-button w3-blue w3-large w3-round">Add New Car</a>
+    </div>
+
+</div>
+
+</body>
+</html>
