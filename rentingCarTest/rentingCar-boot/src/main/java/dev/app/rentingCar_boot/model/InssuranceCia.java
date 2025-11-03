@@ -27,7 +27,7 @@ public class InssuranceCia {
 
     //@OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
     //private List<Car> cars;
-    @ManyToMany(mappedBy = "insuranceCias")
+    @ManyToMany(mappedBy = "inssuranceCia")
     @JsonIgnore
     private List<Car> cars;
 
