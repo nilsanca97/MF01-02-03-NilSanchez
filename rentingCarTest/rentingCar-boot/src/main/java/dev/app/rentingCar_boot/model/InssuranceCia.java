@@ -1,11 +1,9 @@
 package dev.app.rentingCar_boot.model;
 
 import dev.app.rentingCar_boot.utils.GenerateUUID;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +16,12 @@ public class InssuranceCia {
     private String description;
     private int qtyEmployee;
     private boolean isActive;
+
+    // Implement @ElementCollection for Delegations in InsuranceCia
+    @ElementCollection
+    @CollectionTable(name = "INSURANCECIA_DELEGATIONS", joinColumns = @JoinColumn(name = "INSURANCECIA_FK"))
+    @Column (name = "DELEGATION")
+    private List<String> delegations = new ArrayList<>();
 
     @OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
     private List<Car> cars;
@@ -66,6 +70,13 @@ public class InssuranceCia {
         isActive = active;
     }
 
+    public List<String> getDelegations() {
+        return delegations;
+    }
+
+    public void setDelegations(List<String> delegations) {
+        this.delegations = delegations;
+    }
     public List<Car> getCars() {
         return cars;
     }
@@ -82,6 +93,8 @@ public class InssuranceCia {
                 ", description='" + description + '\'' +
                 ", qtyEmployee=" + qtyEmployee +
                 ", isActive=" + isActive +
+                ", delegations= "+ delegations +
+                ", car= "+ cars +
                 '}';
     }
 }
