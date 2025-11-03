@@ -1,9 +1,11 @@
 package dev.app.rentingCar_boot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.app.rentingCar_boot.utils.GenerateUUID;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +25,10 @@ public class InssuranceCia {
     @Column (name = "DELEGATION")
     private List<String> delegations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
+    //@OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
+    //private List<Car> cars;
+    @ManyToMany(mappedBy = "insuranceCias")
+    @JsonIgnore
     private List<Car> cars;
 
     public InssuranceCia() {
