@@ -29,9 +29,9 @@ public class InssuranceCia {
     @Column (name = "DELEGATION")
     private List<String> delegations = new ArrayList<>();
 
-    //@ManyToMany(mappedBy = "inssuranceCia")
-    //@JsonIgnore
-    //private List<Car> cars;
+    @JsonIgnore
+    @OneToMany(mappedBy= "inssuranceCia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private InsuranceContract insuranceContract;
 
     public InssuranceCia() {
         this.id = GenerateUUID.generateFourDigitUuid();
