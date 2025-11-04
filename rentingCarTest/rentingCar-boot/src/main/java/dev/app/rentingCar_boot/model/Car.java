@@ -1,6 +1,7 @@
 package dev.app.rentingCar_boot.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.app.rentingCar_boot.utils.GenerateUUID;
 import jakarta.persistence.*;
 import java.time.Instant;
@@ -24,7 +25,9 @@ public class Car {
     private int year;
     private double price;
 
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonManagedReference //on Car.inssuranceCia this marks the "forward" part
+                          // of the reference (the parent side)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "inssurance_cia_id")
     private InssuranceCia inssuranceCia;
