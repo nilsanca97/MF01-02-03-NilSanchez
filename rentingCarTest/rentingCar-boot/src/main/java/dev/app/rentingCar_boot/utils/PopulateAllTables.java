@@ -18,6 +18,9 @@ public class PopulateAllTables {
     @Autowired
     private PopulateDrivingCourse populateDrivingCourse;
 
+    @Autowired
+    private PopulateInssuranceCia populateInssuranceCia;
+
     public String populateAllTables(int qty) {
 
         // let s populate cars first
@@ -51,6 +54,18 @@ public class PopulateAllTables {
         } else return "Populate Booking operations failed";
 
         if (!populateDrivingCourseStatus.isStatus()) return "Populate DrivingCourse operations failed";
+
+        /*
+        // once driving courses are populated, let s populate inssuranceCia
+        PopulateStatus populateInssuranceCiaStatus = null;
+        if (populateDrivingCourseStatus.isStatus()) {
+            populateInssuranceCiaStatus = populateInssuranceCia.populateInssuranceCia(qty);
+            System.out.println("\nPopulate InssuranceCia operations: " + populateInssuranceCiaStatus.getQty() +
+                    " \n" + populateInssuranceCiaStatus.getMessage());
+        } else return "Populate DrivingCourse operation failed";
+
+        if (!populateInssuranceCiaStatus.isStatus()) return "Populate InssuranceCia operation failed";
+        */
 
     return "Populate All Tables operations completed successfully";
     }
