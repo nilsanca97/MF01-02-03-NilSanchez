@@ -1,5 +1,6 @@
 package dev.app.rentingCar_boot.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.app.rentingCar_boot.utils.GenerateUUID;
 import jakarta.persistence.*;
@@ -17,17 +18,20 @@ public class InssuranceCia {
     private int qtyEmployee;
     private boolean isActive;
 
+    @JsonBackReference  // This marks the "back" part of the reference (the child side) and
+                        // prevents it from being serialized
+    @OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
+    private List<Car> cars;
+
     // Implement @ElementCollection for Delegations in InsuranceCia
     @ElementCollection
     @CollectionTable(name = "INSURANCECIA_DELEGATIONS", joinColumns = @JoinColumn(name = "INSURANCECIA_FK"))
     @Column (name = "DELEGATION")
     private List<String> delegations = new ArrayList<>();
 
-    //@OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
+    //@ManyToMany(mappedBy = "inssuranceCia")
+    //@JsonIgnore
     //private List<Car> cars;
-    @ManyToMany(mappedBy = "inssuranceCia")
-    @JsonIgnore
-    private List<Car> cars;
 
     public InssuranceCia() {
         this.id = GenerateUUID.generateFourDigitUuid();
