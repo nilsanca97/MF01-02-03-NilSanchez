@@ -25,6 +25,10 @@ public class Car {
     private int year;
     private double price;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+    private InsuranceContract insuranceContract;
+
     //@JsonIgnore
     @JsonManagedReference //on Car.inssuranceCia this marks the "forward" part
                           // of the reference (the parent side)
