@@ -2,13 +2,96 @@ package dev.app.rentingCar_boot.utils;
 
 import dev.app.rentingCar_boot.model.InssuranceCia;
 import dev.app.rentingCar_boot.repository.InssuranceCiaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Component
 public class PopulateInssuranceCia {
 
- @Autowired
+    @Autowired
+    private InssuranceCiaRepository inssuranceCiaRepository;
+
+    @Transactional
+    public List<InssuranceCia> generateInssuranceCias(int qty){
+
+        List<InssuranceCia> generatedInssuranceCias = new ArrayList<>();
+        //List<InssuranceCia> generatedList= generateInssuranceCias(qty);
+        Random random = new Random();
+
+        String[] companyNames = {"State Farm", "Geico", "Progressive", "Allstate", "Liberty Mutual",
+                "USAA", "Farmers", "Nationwide", "American Family", "Travelers"};
+
+        String[] descriptions = {
+                "Comprehensive auto insurance with excellent customer service",
+                "Affordable car insurance with 24/7 claims support",
+                "Innovative insurance solutions with competitive rates",
+                "Full coverage auto insurance with roadside assistance",
+                "Trusted insurance provider with nationwide coverage",
+                "Premium insurance services for military families",
+                "Local insurance expertise with personal touch",
+                "Reliable coverage with accident forgiveness programs",
+                "Family-focused insurance with multi-policy discounts",
+                "Professional insurance services with quick claims processing"
+        };
+        // add a list of delegations
+        List<List<String>> delegationsList = List.of(
+                List.of("Barcelona Office\nCarrer Balmes, 123", "Madrid Office\nCalle Embajadores, 45"),
+                List.of("Bilbao Office\nCalle Gran Via, 87", "Sevilla Office\nPlaza Mayor, 1"),
+                List.of("Valencia Office\nAvenida del Puerto, 56"),
+                List.of("Zaragoza Office\nCalle del Pilar, 12", "Granada Office\nCamino Real, 9"),
+                List.of("Málaga Office\nCalle Larios, 22"),
+                List.of("Alicante Office\nCalle Mayor, 33"),
+                List.of("Valladolid Office\nCalle Zorrilla, 14"),
+                List.of("Murcia Office\nCalle Trapería, 45"),
+                List.of("Santander Office\nPaseo Pereda, 6"),
+                List.of("Oviedo Office\nCalle Uría, 18")
+        );
+
+        // generate random InssuranceCia
+        for (int i = 0; i < qty; i++) {
+            InssuranceCia inssuranceCia = new InssuranceCia();
+
+            //String id = "INS" + String.format("%04d", i + 1);
+            String name = companyNames[random.nextInt(companyNames.length)];
+            String description = descriptions[random.nextInt(descriptions.length)];
+            int qtyEmployee = 50 + random.nextInt(950); // Between 50-1000 employees
+            boolean isActive = random.nextBoolean();
+            //choose a random list of delegations
+            List<String> delegations = delegationsList.get(random.nextInt(delegationsList.size()));
+
+            // Set all variables (attributs) of InssuranceCia class
+            //inssuranceCia.setId(id);
+            inssuranceCia.setName(name);
+            inssuranceCia.setDescription(description);
+            inssuranceCia.setQtyEmployee(qtyEmployee);
+            inssuranceCia.setActive(isActive);
+
+            // set private List<String> delegations = new ArrayList<>(); in InssuranceCia class
+            inssuranceCia.setDelegations(delegations);
+
+            // save to DB
+            inssuranceCiaRepository.save(inssuranceCia);
+            generatedInssuranceCias.add(inssuranceCia);
+
+            // check print for terminal
+            System.out.println("Saved " + inssuranceCia.getName() +
+                    " delegations: " + inssuranceCia.getDelegations());
+
+        }
+        return generatedInssuranceCias;
+    }
+    // method to return a PopulateStatus Object
+    @Transactional
+    public PopulateStatus populateInssuranceCia(int qty) {
+        List<InssuranceCia> generatedList = generateInssuranceCias(qty);
+        return new PopulateStatus(true, "InssuranceCia entities populated successfully", generatedList.size());
+    }
+ /*@Autowired
  private InssuranceCiaRepository inssuranceCiaRepository;
 
  public void populateInssuranceCiaData() {
@@ -26,5 +109,5 @@ public class PopulateInssuranceCia {
      allianz.getDelegations().add("Sevilla Office \n Plaza Mayor, 1");
      inssuranceCiaRepository.save(allianz);
 
- }
+ }*/
 }

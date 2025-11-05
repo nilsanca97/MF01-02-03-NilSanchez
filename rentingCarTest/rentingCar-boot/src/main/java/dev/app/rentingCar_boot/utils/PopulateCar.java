@@ -8,6 +8,7 @@ import dev.app.rentingCar_boot.repository.CarExtrasRepository;
 import dev.app.rentingCar_boot.repository.CarRepository;
 import dev.app.rentingCar_boot.repository.InssuranceCiaRepository;
 import dev.app.rentingCar_boot.repository.InsuranceContractRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,12 +51,12 @@ public class PopulateCar {
                          .append(" car extras (requested: ").append(qty).append(")\n");
             operationIndex++;
             
-            // Operation 3: Generate InssuranceCias (main)
-            List<InssuranceCia> inssuranceCias = generateInssuranceCias(qty);
+            /*// Operation 3: Generate InssuranceCias (main)
+            List<InssuranceCia> inssuranceCias = generatedInssuranceCias(qty);
             operationResults[operationIndex] = inssuranceCias != null && inssuranceCias.size() == qty;
             messageBuilder.append(" Operation 3: Generated ").append(inssuranceCias != null ? inssuranceCias.size() : 0)
                          .append(" insurance companies (requested: ").append(qty).append(")\n");
-            operationIndex++;
+            operationIndex++;*/
             
             // Operation 4: Assign CarExtras to Cars
             assignCarToCarExtras(cars, carExtrass);
@@ -177,69 +178,6 @@ public class PopulateCar {
         return generatedCars;
     }
 
-    public List<InssuranceCia> generateInssuranceCias(int qty){
-         //populateInssuranceCiaData();
-
-        List<InssuranceCia> generatedInssuranceCias = new ArrayList<>();
-        Random random = new Random();
-
-        String[] companyNames = {"State Farm", "Geico", "Progressive", "Allstate", "Liberty Mutual", 
-                                "USAA", "Farmers", "Nationwide", "American Family", "Travelers"};
-        
-        String[] descriptions = {
-            "Comprehensive auto insurance with excellent customer service",
-            "Affordable car insurance with 24/7 claims support",
-            "Innovative insurance solutions with competitive rates",
-            "Full coverage auto insurance with roadside assistance",
-            "Trusted insurance provider with nationwide coverage",
-            "Premium insurance services for military families",
-            "Local insurance expertise with personal touch",
-            "Reliable coverage with accident forgiveness programs",
-            "Family-focused insurance with multi-policy discounts",
-            "Professional insurance services with quick claims processing"
-        };
-        // add a list of delegations
-        List<List<String>> delegationsList = List.of(
-                List.of("Barcelona Office\nCarrer Balmes, 123", "Madrid Office\nCalle Embajadores, 45"),
-                List.of("Bilbao Office\nCalle Gran Via, 87", "Sevilla Office\nPlaza Mayor, 1"),
-                List.of("Valencia Office\nAvenida del Puerto, 56"),
-                List.of("Zaragoza Office\nCalle del Pilar, 12", "Granada Office\nCamino Real, 9"),
-                List.of("Málaga Office\nCalle Larios, 22"),
-                List.of("Alicante Office\nCalle Mayor, 33"),
-                List.of("Valladolid Office\nCalle Zorrilla, 14"),
-                List.of("Murcia Office\nCalle Trapería, 45"),
-                List.of("Santander Office\nPaseo Pereda, 6"),
-                List.of("Oviedo Office\nCalle Uría, 18")
-        );
-
-        // generate random InssuranceCia
-        for (int i = 0; i < qty; i++) {
-            InssuranceCia inssuranceCia = new InssuranceCia();
-            
-            //String id = "INS" + String.format("%04d", i + 1);
-            String name = companyNames[random.nextInt(companyNames.length)];
-            String description = descriptions[random.nextInt(descriptions.length)];
-            int qtyEmployee = 50 + random.nextInt(950); // Between 50-1000 employees
-            boolean isActive = random.nextBoolean();
-            //choose a random list of delegations
-            List<String> delegations = delegationsList.get(random.nextInt(delegationsList.size()));
-
-            // Set all variables (attributs) of InssuranceCia class
-            //inssuranceCia.setId(id);
-            inssuranceCia.setName(name);
-            inssuranceCia.setDescription(description);
-            inssuranceCia.setQtyEmployee(qtyEmployee);
-            inssuranceCia.setActive(isActive);
-            // sett private List<String> delegations = new ArrayList<>(); in InssuranceCia class
-            inssuranceCia.setDelegations(delegations);
-
-            generatedInssuranceCias.add(inssuranceCia);
-            inssuranceCiaRepository.save(inssuranceCia);
-        }
-
-        return generatedInssuranceCias;
-    }
-
     public static String generateRandomPlate(Random random) {
         StringBuilder plate = new StringBuilder();
         // Generate 3 letters
@@ -262,13 +200,16 @@ public class PopulateCar {
             carExtrasRepository.save(carExtras);
         }
     }
-
+    // Assign a random inssuranceCia to each car,
+    // by creating a bridge contract(insuranceContract) between car and inssuranceCia
     public void assignInssuranceCiaToCar(List<Car> cars, List<InssuranceCia> inssuranceCias) {
         Random random = new Random();
 
         for (Car car : cars) {
+            // 1.select/ choose a random inssuranceCia
             InssuranceCia inssuranceCia = inssuranceCias.get(random.nextInt(inssuranceCias.size()));
 
+            //2. create InsuranceContract between car-InssuranceCia
             InsuranceContract contract = new InsuranceContract();
             contract.setContractId(UUID.randomUUID().toString());
             contract.setCar(car);
@@ -276,6 +217,11 @@ public class PopulateCar {
             contract.setStartDate(LocalDate.now());
             contract.setEndDate(LocalDate.now().plusYears(1));
 
+            //3.Keep bidirectional relationship (opcional, but recommended)
+            car.getInsuranceContracts().add(contract);
+            inssuranceCia.getInsuranceContracts().add(contract);
+
+            //4.Save insuranceContract
             insuranceContractRepository.save(contract);
         }
     }

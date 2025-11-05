@@ -27,7 +27,8 @@ public class InssuranceCia {
 
     // Implement @ElementCollection for Delegations in InsuranceCia
     @ElementCollection
-    @CollectionTable(name = "INSURANCECIA_DELEGATIONS", joinColumns = @JoinColumn(name = "INSURANCECIA_FK"))
+    @CollectionTable(name = "INSURANCECIA_DELEGATIONS",
+                    joinColumns = @JoinColumn(name = "INSURANCECIA_FK"))
     @Column (name = "DELEGATION")
     private List<String> delegations = new ArrayList<>();
 
@@ -83,9 +84,17 @@ public class InssuranceCia {
         return delegations;
     }
 
-    public void setDelegations(List<String> delegations) {
+    /*public void setDelegations(List<String> delegations) {
         this.delegations = delegations;
+    }*/
+    public void setDelegations(List<String> delegations) {
+        this.delegations.clear();
+        if (delegations != null) {
+            this.delegations.addAll(delegations);
+        }
     }
+
+
 
     public List<InsuranceContract> getInsuranceContracts() {
         return insuranceContracts;

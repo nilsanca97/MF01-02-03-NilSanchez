@@ -55,7 +55,6 @@ public class PopulateAllTables {
 
         if (!populateDrivingCourseStatus.isStatus()) return "Populate DrivingCourse operations failed";
 
-        /*
         // once driving courses are populated, let s populate inssuranceCia
         PopulateStatus populateInssuranceCiaStatus = null;
         if (populateDrivingCourseStatus.isStatus()) {
@@ -65,7 +64,6 @@ public class PopulateAllTables {
         } else return "Populate DrivingCourse operation failed";
 
         if (!populateInssuranceCiaStatus.isStatus()) return "Populate InssuranceCia operation failed";
-        */
 
     return "Populate All Tables operations completed successfully";
     }
