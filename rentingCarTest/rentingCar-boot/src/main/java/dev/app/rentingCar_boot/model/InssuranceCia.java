@@ -2,6 +2,7 @@ package dev.app.rentingCar_boot.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.app.rentingCar_boot.utils.GenerateUUID;
 import jakarta.persistence.*;
 
@@ -18,10 +19,11 @@ public class InssuranceCia {
     private int qtyEmployee;
     private boolean isActive;
 
-    @JsonBackReference  // This marks the "back" part of the reference (the child side) and
+    /*@JsonBackReference  // This marks the "back" part of the reference (the child side) and
                         // prevents it from being serialized
     @OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
     private List<Car> cars;
+     */
 
     // Implement @ElementCollection for Delegations in InsuranceCia
     @ElementCollection
@@ -29,9 +31,9 @@ public class InssuranceCia {
     @Column (name = "DELEGATION")
     private List<String> delegations = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy= "inssuranceCia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private InsuranceContract insuranceContract;
+    @JsonManagedReference
+    @OneToMany(mappedBy= "inssuranceCia", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
     public InssuranceCia() {
         this.id = GenerateUUID.generateFourDigitUuid();
@@ -84,13 +86,20 @@ public class InssuranceCia {
     public void setDelegations(List<String> delegations) {
         this.delegations = delegations;
     }
-    public List<Car> getCars() {
-        return cars;
+
+    public List<InsuranceContract> getInsuranceContracts() {
+        return insuranceContracts;
     }
 
+    public void setInsuranceContracts(List<InsuranceContract> insuranceContracts) {
+        this.insuranceContracts = insuranceContracts;
+    }
+    /*public List<Car> getCars() {
+        return cars;
+    }
     public void setCars(List<Car> cars) {
         this.cars = cars;
-    }
+    }*/
 
     @Override
     public String toString() {
@@ -101,7 +110,19 @@ public class InssuranceCia {
                 ", qtyEmployee=" + qtyEmployee +
                 ", isActive=" + isActive +
                 ", delegations= "+ delegations +
-                ", car= "+ cars +
+                ", insuranceContracts= "+ insuranceContracts+
+                //", car= "+ cars +
                 '}';
+    }
+
+    // methods helpers (optionals)
+    public void addInsuranceContract(InsuranceContract contract) {
+        insuranceContracts.add(contract);
+        contract.setInssuranceCia(this);
+    }
+
+    public void removeInsuranceContract(InsuranceContract contract) {
+        insuranceContracts.remove(contract);
+        contract.setInssuranceCia(null);
     }
 }

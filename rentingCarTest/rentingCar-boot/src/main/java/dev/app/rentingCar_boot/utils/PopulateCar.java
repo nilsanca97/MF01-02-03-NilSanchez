@@ -3,17 +3,16 @@ package dev.app.rentingCar_boot.utils;
 import dev.app.rentingCar_boot.model.Car;
 import dev.app.rentingCar_boot.model.CarExtras;
 import dev.app.rentingCar_boot.model.InssuranceCia;
+import dev.app.rentingCar_boot.model.InsuranceContract;
 import dev.app.rentingCar_boot.repository.CarExtrasRepository;
 import dev.app.rentingCar_boot.repository.CarRepository;
 import dev.app.rentingCar_boot.repository.InssuranceCiaRepository;
+import dev.app.rentingCar_boot.repository.InsuranceContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Component
 public class PopulateCar {
@@ -26,6 +25,10 @@ public class PopulateCar {
 
     @Autowired
     private InssuranceCiaRepository inssuranceCiaRepository;
+
+    @Autowired
+    private InsuranceContractRepository insuranceContractRepository;
+
 
     public PopulateStatus populateCar(int qty) {
         StringBuilder messageBuilder = new StringBuilder();
@@ -175,6 +178,8 @@ public class PopulateCar {
     }
 
     public List<InssuranceCia> generateInssuranceCias(int qty){
+         //populateInssuranceCiaData();
+
         List<InssuranceCia> generatedInssuranceCias = new ArrayList<>();
         Random random = new Random();
 
@@ -193,7 +198,21 @@ public class PopulateCar {
             "Family-focused insurance with multi-policy discounts",
             "Professional insurance services with quick claims processing"
         };
+        // add a list of delegations
+        List<List<String>> delegationsList = List.of(
+                List.of("Barcelona Office\nCarrer Balmes, 123", "Madrid Office\nCalle Embajadores, 45"),
+                List.of("Bilbao Office\nCalle Gran Via, 87", "Sevilla Office\nPlaza Mayor, 1"),
+                List.of("Valencia Office\nAvenida del Puerto, 56"),
+                List.of("Zaragoza Office\nCalle del Pilar, 12", "Granada Office\nCamino Real, 9"),
+                List.of("Málaga Office\nCalle Larios, 22"),
+                List.of("Alicante Office\nCalle Mayor, 33"),
+                List.of("Valladolid Office\nCalle Zorrilla, 14"),
+                List.of("Murcia Office\nCalle Trapería, 45"),
+                List.of("Santander Office\nPaseo Pereda, 6"),
+                List.of("Oviedo Office\nCalle Uría, 18")
+        );
 
+        // generate random InssuranceCia
         for (int i = 0; i < qty; i++) {
             InssuranceCia inssuranceCia = new InssuranceCia();
             
@@ -202,12 +221,17 @@ public class PopulateCar {
             String description = descriptions[random.nextInt(descriptions.length)];
             int qtyEmployee = 50 + random.nextInt(950); // Between 50-1000 employees
             boolean isActive = random.nextBoolean();
+            //choose a random list of delegations
+            List<String> delegations = delegationsList.get(random.nextInt(delegationsList.size()));
 
+            // Set all variables (attributs) of InssuranceCia class
             //inssuranceCia.setId(id);
             inssuranceCia.setName(name);
             inssuranceCia.setDescription(description);
             inssuranceCia.setQtyEmployee(qtyEmployee);
             inssuranceCia.setActive(isActive);
+            // sett private List<String> delegations = new ArrayList<>(); in InssuranceCia class
+            inssuranceCia.setDelegations(delegations);
 
             generatedInssuranceCias.add(inssuranceCia);
             inssuranceCiaRepository.save(inssuranceCia);
@@ -244,8 +268,15 @@ public class PopulateCar {
 
         for (Car car : cars) {
             InssuranceCia inssuranceCia = inssuranceCias.get(random.nextInt(inssuranceCias.size()));
-            car.setInssuranceCia(inssuranceCia);
-            carRepository.save(car);
+
+            InsuranceContract contract = new InsuranceContract();
+            contract.setContractId(UUID.randomUUID().toString());
+            contract.setCar(car);
+            contract.setInssuranceCia(inssuranceCia);
+            contract.setStartDate(LocalDate.now());
+            contract.setEndDate(LocalDate.now().plusYears(1));
+
+            insuranceContractRepository.save(contract);
         }
     }
 

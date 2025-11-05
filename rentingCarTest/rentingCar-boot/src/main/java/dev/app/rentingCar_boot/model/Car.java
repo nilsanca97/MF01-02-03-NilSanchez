@@ -25,23 +25,25 @@ public class Car {
     private int year;
     private double price;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER )
-    private InsuranceContract insuranceContract;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+    private List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
+    /*
     //@JsonIgnore
     @JsonManagedReference //on Car.inssuranceCia this marks the "forward" part
                           // of the reference (the parent side)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "inssurance_cia_id")
     private InssuranceCia inssuranceCia;
+    */
 
     @OneToMany(mappedBy= "carFK" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CarExtras> carExtras = new ArrayList<>();
 
     //@ElementCollection(fetch = FetchType.LAZY)
-    @JsonIgnore
     @OneToMany(mappedBy= "car" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Booking> bookings = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -136,13 +138,19 @@ public class Car {
         this.carExtras = carExtras;
     }
 
-    public InssuranceCia getInssuranceCia() {
-        return inssuranceCia;
+    public List<InsuranceContract> getInsuranceContracts() {
+        return insuranceContracts;
     }
 
+    public void setInsuranceContracts(List<InsuranceContract> insuranceContracts) {
+        this.insuranceContracts = insuranceContracts;
+    }
+     /*public InssuranceCia getInssuranceCia() {
+        return inssuranceCia;
+    }
     public void setInssuranceCia(InssuranceCia inssuranceCia) {
         this.inssuranceCia = inssuranceCia;
-    }
+    }*/
 
     public Map<Integer, Boolean> getAvailableDates() {
         return availableDates;
@@ -152,7 +160,16 @@ public class Car {
         this.availableDates = availableDates;
     }
 
+    // helper (bidirectional?) to add InsuranceContract to a Car
+    public void addInsuranceContract(InsuranceContract contract) {
+        insuranceContracts.add(contract);
+        contract.setCar(this); // sincroniza el lado inverso
+    }
 
+    public void removeInsuranceContract(InsuranceContract contract) {
+        insuranceContracts.remove(contract);
+        contract.setCar(null);
+    }
 
     @Override
     public String toString() {
@@ -164,7 +181,14 @@ public class Car {
                 ", year=" + year +
                 ", price=" + price +
                 ", carAge=" + carAge() +
-                ", inssuranceCia=" + (inssuranceCia != null ? inssuranceCia.getName() : "null") +
+                ", insuranceContracts=" + (
+                    insuranceContracts != null && !insuranceContracts.isEmpty()
+                        ? insuranceContracts.stream()
+                            .map(InsuranceContract::getContractId)
+                            .toList()
+                        : "[]"
+                ) +
+                //", inssuranceCia=" + (inssuranceCia != null ? inssuranceCia.getName() : "null") +
                 ", carExtras=" + carExtras.size() + " extras" +
                 ", bookings=" + bookings.size() + " bookings [" +
                 String.join(", ", bookings.stream().map(Booking::getId).toList()) + "]" +
