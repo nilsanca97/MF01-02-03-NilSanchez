@@ -2,12 +2,18 @@ package dev.app.rentingCar_boot.utils;
 
 import dev.app.rentingCar_boot.model.Car;
 import dev.app.rentingCar_boot.model.InssuranceCia;
+import dev.app.rentingCar_boot.model.InsuranceContract;
 import dev.app.rentingCar_boot.repository.CarRepository;
 import dev.app.rentingCar_boot.repository.InssuranceCiaRepository;
+import dev.app.rentingCar_boot.repository.InsuranceContractRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @Component
 public class PopulateAllTables {
@@ -33,6 +39,9 @@ public class PopulateAllTables {
     @Autowired
     private InssuranceCiaRepository inssuranceCiaRepository;
 
+    @Autowired
+    private InsuranceContractRepository insuranceContractRepository;
+
     public String populateAllTables(int qty) {
 
         //1.1 let s populate cars first
@@ -56,7 +65,8 @@ public class PopulateAllTables {
         List<Car> allCars = (List<Car>) carRepository.findAll();
         List<InssuranceCia> allInssuranceCias = (List<InssuranceCia>) inssuranceCiaRepository.findAll();
 
-        populateCar.assignInssuranceCiaToCar(allCars, allInssuranceCias);
+        //populateCar.assignInssuranceCiaToCar(allCars, allInssuranceCias);
+        assignInssuranceCiaToCar(carRepository.findAll(), inssuranceCiaRepository.findAll());
 
         System.out.println("\nAssigned insurance companies to cars successfully via InsuranceContract bridge.");
 
@@ -88,6 +98,45 @@ public class PopulateAllTables {
         if (!populateDrivingCourseStatus.isStatus()) return "Populate DrivingCourse operations failed";
 
     return "Populate All Tables operations completed successfully";
+    }
+
+    @Transactional
+    public void assignInssuranceCiaToCar(List<Car> cars, List<InssuranceCia> inssuranceCias) {
+        System.out.println("\n--- Starting assignInssuranceCiaToCar ---");
+
+        if (cars == null || cars.isEmpty()) {
+            System.out.println("No cars available to assign insurance companies.");
+            return;
+        }
+        if (inssuranceCias == null || inssuranceCias.isEmpty()) {
+            System.out.println("No insurance companies available to assign to cars.");
+            return;
+        }
+
+        Random random = new Random();
+        int assignedCount = 0;
+
+        for (Car car : cars) {
+            InssuranceCia inssuranceCia = inssuranceCias.get(random.nextInt(inssuranceCias.size()));
+
+            InsuranceContract contract = new InsuranceContract();
+            contract.setContractId(UUID.randomUUID().toString());
+            contract.setCar(car);
+            contract.setInssuranceCia(inssuranceCia);
+            contract.setStartDate(LocalDate.now());
+            contract.setEndDate(LocalDate.now().plusYears(1));
+
+            car.getInsuranceContracts().add(contract);
+            inssuranceCia.getInsuranceContracts().add(contract);
+
+            insuranceContractRepository.save(contract);
+            assignedCount++;
+
+            System.out.println("Assigned insurance " + inssuranceCia.getName() +
+                    " to car " + car.getBrand() + " (" + contract.getContractId() + ")");
+        }
+
+        System.out.println("Finished assignInssuranceCiaToCar. Total: " + assignedCount);
     }
 
 }
