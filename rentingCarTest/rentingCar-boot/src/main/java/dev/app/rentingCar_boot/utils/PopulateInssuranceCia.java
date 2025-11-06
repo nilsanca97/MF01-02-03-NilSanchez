@@ -1,6 +1,7 @@
 package dev.app.rentingCar_boot.utils;
 
 import dev.app.rentingCar_boot.model.InssuranceCia;
+import dev.app.rentingCar_boot.repository.CarRepository;
 import dev.app.rentingCar_boot.repository.InssuranceCiaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,62 @@ public class PopulateInssuranceCia {
     @Autowired
     private InssuranceCiaRepository inssuranceCiaRepository;
 
+    /*
+    // method to return a PopulateStatus Object
     @Transactional
+    public PopulateStatus populateInssuranceCia(int qty) {
+        List<InssuranceCia> generatedList = generateInssuranceCias(qty);
+        return new PopulateStatus(true, "InssuranceCia entities populated successfully", generatedList.size());
+    }*/
+    @Transactional
+    public PopulateStatus populateInssuranceCia(int qty) {
+        StringBuilder messageBuilder = new StringBuilder();
+        boolean[] operationResults = new boolean[2];
+        int operationIndex = 0;
+
+        try {
+            //Operation 1: Generate main Inssurance companies
+            List<InssuranceCia> inssuranceCias = generateInssuranceCias(qty);
+            operationResults[operationIndex] = inssuranceCias != null && inssuranceCias.size() == qty;
+            messageBuilder.append(" Operation 3: Generated ").append(inssuranceCias != null ? inssuranceCias.size() : 0)
+                    .append(" insurance companies (requested: ").append(qty).append(")\n");
+            operationIndex++;
+
+            /*// Operation 5: Assign InssuranceCias to Cars
+            assignInssuranceCiaToCar(cars, inssuranceCias);
+            operationResults[operationIndex] = true; // Assume success if no exception
+            messageBuilder.append(" Operation 5: Assigned insurance companies to cars successfully\n");
+            operationIndex++;*/
+
+            // Operation 2: Generate additional unassigned Inssurance companies
+            List<InssuranceCia> additionalInssuranceCias = generateInssuranceCias(10);
+            operationResults[operationIndex] = additionalInssuranceCias != null && additionalInssuranceCias.size() == 10;
+            messageBuilder.append(" Operation 8: Generated ").append(additionalInssuranceCias != null ? additionalInssuranceCias.size() : 0)
+                    .append(" additional insurance companies (requested: 10)\n");
+        } catch (Exception e) {
+            // Mark current and remaining operations as failed
+            for (int i = operationIndex; i < 2; i++) {
+                operationResults[i] = false;
+            }
+            messageBuilder.append("Error occurred during operation ")
+                    .append(operationIndex + 1)
+                    .append(": ").append(e.getMessage()).append("\n");
+        }
+        // Check if all operations succeeded
+        boolean allSuccess = true;
+        for (boolean result : operationResults) {
+            if (!result) {
+                allSuccess = false;
+                break;
+            }
+        }
+        // Calculate total quantity (main qty + 10 additional entities)
+        int totalQty = qty +10;
+
+        return new PopulateStatus(allSuccess, messageBuilder.toString().trim(), totalQty);
+    }
+
+    //Helper method that creates insurance companies and persists them.
     public List<InssuranceCia> generateInssuranceCias(int qty){
 
         List<InssuranceCia> generatedInssuranceCias = new ArrayList<>();
@@ -70,7 +126,6 @@ public class PopulateInssuranceCia {
             inssuranceCia.setDescription(description);
             inssuranceCia.setQtyEmployee(qtyEmployee);
             inssuranceCia.setActive(isActive);
-
             // set private List<String> delegations = new ArrayList<>(); in InssuranceCia class
             inssuranceCia.setDelegations(delegations);
 
@@ -84,12 +139,6 @@ public class PopulateInssuranceCia {
 
         }
         return generatedInssuranceCias;
-    }
-    // method to return a PopulateStatus Object
-    @Transactional
-    public PopulateStatus populateInssuranceCia(int qty) {
-        List<InssuranceCia> generatedList = generateInssuranceCias(qty);
-        return new PopulateStatus(true, "InssuranceCia entities populated successfully", generatedList.size());
     }
  /*@Autowired
  private InssuranceCiaRepository inssuranceCiaRepository;
