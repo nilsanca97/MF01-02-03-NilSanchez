@@ -64,11 +64,11 @@ public class PopulateCar {
             messageBuilder.append(" Operation 4: Assigned car extras to cars successfully\n");
             operationIndex++;
             
-            // Operation 5: Assign InssuranceCias to Cars
+            /*// Operation 5: Assign InssuranceCias to Cars
             assignInssuranceCiaToCar(cars, inssuranceCias);
             operationResults[operationIndex] = true; // Assume success if no exception
             messageBuilder.append(" Operation 5: Assigned insurance companies to cars successfully\n");
-            operationIndex++;
+            operationIndex++;*/
             
             // Operation 6: Generate additional Cars (unassigned)
             List<Car> additionalCars = generateCars(10);
@@ -84,15 +84,15 @@ public class PopulateCar {
                          .append(" additional car extras (requested: 10)\n");
             operationIndex++;
             
-            // Operation 8: Generate additional InssuranceCias (unassigned)
+            /*// Operation 8: Generate additional InssuranceCias (unassigned)
             List<InssuranceCia> additionalInssuranceCias = generateInssuranceCias(10);
             operationResults[operationIndex] = additionalInssuranceCias != null && additionalInssuranceCias.size() == 10;
             messageBuilder.append(" Operation 8: Generated ").append(additionalInssuranceCias != null ? additionalInssuranceCias.size() : 0)
                          .append(" additional insurance companies (requested: 10)\n");
-            
+            */
         } catch (Exception e) {
             // Mark current and remaining operations as failed
-            for (int i = operationIndex; i < 8; i++) {
+            for (int i = operationIndex; i < 5; i++) {
                 operationResults[i] = false;
             }
             messageBuilder.append("Error occurred during operation ").append(operationIndex + 1)
