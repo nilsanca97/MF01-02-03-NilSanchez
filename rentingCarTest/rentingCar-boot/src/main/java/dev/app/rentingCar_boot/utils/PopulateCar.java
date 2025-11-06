@@ -30,7 +30,8 @@ public class PopulateCar {
     @Autowired
     private InsuranceContractRepository insuranceContractRepository;
 
-
+    //Populates cars and related items. This method only deals with cars and extras;
+    //insurance companies are generated in PopulateInssuranceCia and then assigned here
     public PopulateStatus populateCar(int qty) {
         StringBuilder messageBuilder = new StringBuilder();
         boolean[] operationResults = new boolean[8];
@@ -64,11 +65,11 @@ public class PopulateCar {
             messageBuilder.append(" Operation 4: Assigned car extras to cars successfully\n");
             operationIndex++;
             
-            /*// Operation 5: Assign InssuranceCias to Cars
+            // Operation 5: Assign InssuranceCias to Cars
             assignInssuranceCiaToCar(cars, inssuranceCias);
             operationResults[operationIndex] = true; // Assume success if no exception
             messageBuilder.append(" Operation 5: Assigned insurance companies to cars successfully\n");
-            operationIndex++;*/
+            operationIndex++;
             
             // Operation 6: Generate additional Cars (unassigned)
             List<Car> additionalCars = generateCars(10);
@@ -202,8 +203,23 @@ public class PopulateCar {
     }
     // Assign a random inssuranceCia to each car,
     // by creating a bridge contract(insuranceContract) between car and inssuranceCia
+    @Transactional
     public void assignInssuranceCiaToCar(List<Car> cars, List<InssuranceCia> inssuranceCias) {
+        // defensive programming
+        System.out.println("\n--- Starting assignInssuranceCiaToCar ---");
+
+        if (cars == null || cars.isEmpty()) {
+            System.out.println("No cars available to assign insurance companies.");
+            return;
+        }
+        if (inssuranceCias == null || inssuranceCias.isEmpty()) {
+            System.out.println("No insurance companies available to assign to cars.");
+            return;
+        }
+        //finish with defensive programming
+        // start with create method "assignInssuranceCiaToCar"
         Random random = new Random();
+        int assignedCount = 0;
 
         for (Car car : cars) {
             // 1.select/ choose a random inssuranceCia
@@ -223,7 +239,15 @@ public class PopulateCar {
 
             //4.Save insuranceContract
             insuranceContractRepository.save(contract);
+
+            assignedCount++;
+
+            // Log for debug
+            System.out.println("Assigned insurance " + inssuranceCia.getName() + " to car " + car.getBrand() +
+                    " (contract id: " + contract.getContractId() + ")");
         }
+        System.out.println("Finished assignInssuranceCiaToCar");
+        System.out.println("Total contracts created: "+ assignedCount);
     }
 
     // ------------------------------ available dates by car and year -------------------
@@ -319,6 +343,4 @@ public class PopulateCar {
             default: return 31;
         }
     }
-
-
 }
