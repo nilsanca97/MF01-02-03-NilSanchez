@@ -192,55 +192,6 @@ public class PopulateCar {
 }
 
     /*
-    // Assign a random inssuranceCia to each car,
-    // by creating a bridge contract(insuranceContract) between car and inssuranceCia
-    @Transactional
-    public void assignInssuranceCiaToCar(List<Car> cars, List<InssuranceCia> inssuranceCias) {
-        // defensive programming
-        System.out.println("\n--- Starting assignInssuranceCiaToCar ---");
-
-        if (cars == null || cars.isEmpty()) {
-            System.out.println("No cars available to assign insurance companies.");
-            return;
-        }
-        if (inssuranceCias == null || inssuranceCias.isEmpty()) {
-            System.out.println("No insurance companies available to assign to cars.");
-            return;
-        }
-        //finish with defensive programming
-        // start with create method "assignInssuranceCiaToCar"
-        Random random = new Random();
-        int assignedCount = 0;
-
-        for (Car car : cars) {
-            // 1.select/ choose a random inssuranceCia
-            InssuranceCia inssuranceCia = inssuranceCias.get(random.nextInt(inssuranceCias.size()));
-
-            //2. create InsuranceContract between car-InssuranceCia
-            InsuranceContract contract = new InsuranceContract();
-            contract.setContractId(UUID.randomUUID().toString());
-            contract.setCar(car);
-            contract.setInssuranceCia(inssuranceCia);
-            contract.setStartDate(LocalDate.now());
-            contract.setEndDate(LocalDate.now().plusYears(1));
-
-            //3.Keep bidirectional relationship (opcional, but recommended)
-            car.getInsuranceContracts().add(contract);
-            inssuranceCia.getInsuranceContracts().add(contract);
-
-            //4.Save insuranceContract
-            insuranceContractRepository.save(contract);
-
-            assignedCount++;
-
-            // Log for debug
-            System.out.println("Assigned insurance " + inssuranceCia.getName() + " to car " + car.getBrand() +
-                    " (contract id: " + contract.getContractId() + ")");
-        }
-        System.out.println("Finished assignInssuranceCiaToCar");
-        System.out.println("Total contracts created: "+ assignedCount);
-    }
-
     // ------------------------------ available dates by car and year -------------------
 
     // Assign available dates to a car for a specific year
