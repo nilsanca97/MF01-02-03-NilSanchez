@@ -49,8 +49,16 @@ public class PopulateAllTables {
 
         if (!populateInssuranceCiaStatus.isStatus()) return "Populate InssuranceCia operation failed";
 
-        // 1.3 once inssuranceCias are populated, lets  assign InssuranceCiaToCar
+        /*// 1.3 once inssuranceCias are populated, lets  assign InssuranceCiaToCar
         populateCar.assignInssuranceCiaToCar(carRepository.findAll(), inssuranceCiaRepository.findAll());
+        */
+        // 1.3 once inssuranceCias are populated, lets assign InssuranceCiaToCar
+        List<Car> allCars = (List<Car>) carRepository.findAll();
+        List<InssuranceCia> allInssuranceCias = (List<InssuranceCia>) inssuranceCiaRepository.findAll();
+
+        populateCar.assignInssuranceCiaToCar(allCars, allInssuranceCias);
+
+        System.out.println("\nAssigned insurance companies to cars successfully via InsuranceContract bridge.");
 
         // let s populate clients
         PopulateStatus populateClientStatus = null;
