@@ -34,20 +34,14 @@ public class PopulateInssuranceCia {
             //Operation 1: Generate main Inssurance companies
             List<InssuranceCia> inssuranceCias = generateInssuranceCias(qty);
             operationResults[operationIndex] = inssuranceCias != null && inssuranceCias.size() == qty;
-            messageBuilder.append(" Operation 3: Generated ").append(inssuranceCias != null ? inssuranceCias.size() : 0)
+            messageBuilder.append(" Operation 1: Generated ").append(inssuranceCias != null ? inssuranceCias.size() : 0)
                     .append(" insurance companies (requested: ").append(qty).append(")\n");
             operationIndex++;
-
-            /*// Operation 5: Assign InssuranceCias to Cars
-            assignInssuranceCiaToCar(cars, inssuranceCias);
-            operationResults[operationIndex] = true; // Assume success if no exception
-            messageBuilder.append(" Operation 5: Assigned insurance companies to cars successfully\n");
-            operationIndex++;*/
 
             // Operation 2: Generate additional unassigned Inssurance companies
             List<InssuranceCia> additionalInssuranceCias = generateInssuranceCias(10);
             operationResults[operationIndex] = additionalInssuranceCias != null && additionalInssuranceCias.size() == 10;
-            messageBuilder.append(" Operation 8: Generated ").append(additionalInssuranceCias != null ? additionalInssuranceCias.size() : 0)
+            messageBuilder.append(" Operation 2: Generated ").append(additionalInssuranceCias != null ? additionalInssuranceCias.size() : 0)
                     .append(" additional insurance companies (requested: 10)\n");
         } catch (Exception e) {
             // Mark current and remaining operations as failed
