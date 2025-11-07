@@ -21,6 +21,9 @@ public class PopulateTests {
     PopulateClient populateClient;
 
     @Autowired
+    PopulateInssuranceCia populateInssuranceCia;
+
+    @Autowired
     PopulateAllTables populateAllTables;
 
     @Test
@@ -30,6 +33,11 @@ public class PopulateTests {
         PopulateStatus populateCarStatus = populateCar.populateCar(10);
         System.out.println("\nPopulate Car operations: " + populateCarStatus.getQty() +
                 " \n" + populateCarStatus.getMessage());
+
+        // lets populate Inssurance companies
+        PopulateStatus populateInssuranceCiaStatus= populateInssuranceCia.populateInssuranceCia(10);
+        System.out.println("\n Populate InssuranceCia operations: "+ populateInssuranceCiaStatus.getQty() +
+                " \n" + populateInssuranceCiaStatus.getMessage());
 
         // let s populate clients
         PopulateStatus populateClientStatus = populateClient.populateClient(10);
