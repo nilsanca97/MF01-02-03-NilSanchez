@@ -44,11 +44,12 @@ public class PopulateAllTables {
 
     public String populateAllTables(int qty) {
 
-        //1.1 let s populate cars first
+        //1.1 Populate cars first
         PopulateStatus populateCarStatus = populateCar.populateCar(qty);
         System.out.println("\nPopulate Car operations: " + populateCarStatus.getQty() +
                 " \n" + populateCarStatus.getMessage());
-        // 1.2 once cars are populated, lets populate insurance companies
+        // once cars are populated,
+        // 1.2 Populate Insurance Companies
         PopulateStatus populateInssuranceCiaStatus = null;
         if (populateCarStatus.isStatus()) {
             populateInssuranceCiaStatus = populateInssuranceCia.populateInssuranceCia(qty);
@@ -58,17 +59,15 @@ public class PopulateAllTables {
 
         if (!populateInssuranceCiaStatus.isStatus()) return "Populate InssuranceCia operation failed";
 
-        /*// 1.3 once inssuranceCias are populated, lets  assign InssuranceCiaToCar
-        populateCar.assignInssuranceCiaToCar(carRepository.findAll(), inssuranceCiaRepository.findAll());
-        */
-        // 1.3 once inssuranceCias are populated, lets assign InssuranceCiaToCar
+        // once inssuranceCias are populated,
+        // 1.3 Assign Inssurance Companies to Cars
         List<Car> allCars = (List<Car>) carRepository.findAll();
         List<InssuranceCia> allInssuranceCias = (List<InssuranceCia>) inssuranceCiaRepository.findAll();
 
-        //populateCar.assignInssuranceCiaToCar(allCars, allInssuranceCias);
         assignInssuranceCiaToCar(allCars, allInssuranceCias);
         System.out.println("\nAssigned insurance companies to cars successfully via InsuranceContract bridge.");
 
+        // Inssurance companies are populated and assigned to Cars,
         // 2 Populate clients
         PopulateStatus populateClientStatus = null;
         if (populateCarStatus.isStatus()) {
@@ -78,8 +77,8 @@ public class PopulateAllTables {
         } else return "Populate InssuranceCia operations failed";
 
 
-        // once cars are populated,
-        // 3. let s populate bookings
+        // once Clients are populated,
+        // 3.Populate bookings
         PopulateStatus populateBookingStatus = null;
         if (populateClientStatus.isStatus()) {
         populateBookingStatus = populateBooking.populateBooking(qty);
@@ -88,7 +87,7 @@ public class PopulateAllTables {
         } else return "Populate Client operations failed";
 
         // once bookings are populated,
-        // 4. let s populate driving courses
+        // 4. Populate driving courses
         PopulateStatus populateDrivingCourseStatus = null;
         if (populateBookingStatus.isStatus()){
         populateDrivingCourseStatus = populateDrivingCourse.populateDrivingCourse(qty);
@@ -134,7 +133,7 @@ public class PopulateAllTables {
             contract.setStartDate(LocalDate.now());
             contract.setEndDate(LocalDate.now().plusYears(1));
 
-            //3.Keep bidirectional relationship (opcional, but recommended)
+            //3.Keep (mantain) bidirectional relationship (opcional, but recommended)
             car.getInsuranceContracts().add(contract);
             inssuranceCia.getInsuranceContracts().add(contract);
 
