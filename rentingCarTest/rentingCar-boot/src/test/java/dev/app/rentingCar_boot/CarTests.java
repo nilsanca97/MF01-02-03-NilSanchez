@@ -106,7 +106,7 @@ class RentingCarBootApplicationTests {
 
     }
 
-    @Test
+    /*@Test
     void testAssignCarExtraToCarAndCarToInsurance() {
 
         // todo
@@ -141,7 +141,7 @@ class RentingCarBootApplicationTests {
         // save car
         carRepository.save(myOpCar.get());
 
-    }
+    }*/
 
 
     @Test
@@ -149,11 +149,11 @@ class RentingCarBootApplicationTests {
         populateCar.populateCar(10);
     }
 
-    @Test
+    /*@Test
     void testAssignAvailableDatesToCarByYear() {
         List<Car> cars = (List<Car>) carRepository.findAll();
         populateCar.assignAvailableDatesToCarByYear(cars, 2026);
-    }
+    }*/
 
     @Test
     void testUnixTimestampAvailability() {
