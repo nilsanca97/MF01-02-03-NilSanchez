@@ -10,11 +10,6 @@ public class RentingCarBootApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RentingCarBootApplication.class, args);
-
-        //ConfigurableApplicationContext context = SpringApplication.run(RentingCarBootApplication.class, args);
-
-        //PopulateInssuranceCia populateInssuranceCia = context.getBean(PopulateInssuranceCia.class);
-        //populateInssuranceCia.populateInssuranceCiaData();
     }
 
 }
