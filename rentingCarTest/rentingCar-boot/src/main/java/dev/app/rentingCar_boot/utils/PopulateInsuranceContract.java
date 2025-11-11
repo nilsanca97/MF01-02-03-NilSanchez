@@ -1,5 +1,7 @@
 package dev.app.rentingCar_boot.utils;
 
+import dev.app.rentingCar_boot.model.Car;
+import dev.app.rentingCar_boot.model.InssuranceCia;
 import dev.app.rentingCar_boot.model.InsuranceContract;
 import dev.app.rentingCar_boot.repository.CarRepository;
 import dev.app.rentingCar_boot.repository.InssuranceCiaRepository;
@@ -92,4 +94,23 @@ public class PopulateInsuranceContract implements PopulateInsuranceContractServi
         return generatedInsuranceContracts;
     }
 
+    public void assignCarAndInssuranceCiaToInsuranceContract(List<InsuranceContract> insuranceContracts) {
+        Random random = new Random();
+
+        // Get all available cars and inssuranceCias from db
+        List<Car> availableCars = (List<Car>) carRepository.findAll();
+        List<InssuranceCia> availableInssuranceCias = (List<InssuranceCia>) inssuranceCiaRepository.findAll();
+
+        for (InsuranceContract insuranceContract : insuranceContracts) {
+            // Assign random car
+            Car randomCar = availableCars.get(random.nextInt(availableCars.size()));
+            insuranceContract.setCar(randomCar);
+
+            //Assign random inssuranceCia
+            InssuranceCia randomInssuranceCia = availableInssuranceCias.get(random.nextInt(availableInssuranceCias.size()));
+            insuranceContract.setInssuranceCia(randomInssuranceCia);
+
+            insuranceContractRepository.save(insuranceContract);
+        }
+    }
 }
