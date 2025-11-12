@@ -81,7 +81,7 @@ public class InsuranceContract {
     public String toString() {
         return "InsuranceContract{" +
                 "contractId='" + contractId + '\'' +
-                ", car=" + (car != null ? car.getBrand() + " " + car.getModel() + " (" + car.getId() + ")" : "null") +
+                //", car=" + (car != null ? car.getBrand() + " " + car.getModel() + " (" + car.getId() + ")" : "null") +
                 ", insuranceCia=" + (inssuranceCia != null ? inssuranceCia.getName()+ " "+ inssuranceCia.getDescription() + " (" + inssuranceCia.getId() + ")" : "null") +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
