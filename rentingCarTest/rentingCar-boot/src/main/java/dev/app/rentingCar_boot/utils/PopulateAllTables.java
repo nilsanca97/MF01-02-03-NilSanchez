@@ -34,6 +34,9 @@ public class PopulateAllTables {
     private PopulateInssuranceCia populateInssuranceCia;
 
     @Autowired
+    private PopulateInsuranceContract populateInsuranceContract;
+
+    @Autowired
     private CarRepository carRepository;
 
     @Autowired
@@ -86,8 +89,7 @@ public class PopulateAllTables {
                 " \n" + populateBookingStatus.getMessage());
         } else return "Populate Client operations failed";
 
-        // once bookings are populated,
-        // 4. Populate driving courses
+        //4. once bookings are populated, lets populate insuranceContracts
         PopulateStatus populateDrivingCourseStatus = null;
         if (populateBookingStatus.isStatus()){
         populateDrivingCourseStatus = populateDrivingCourse.populateDrivingCourse(qty);
@@ -95,7 +97,16 @@ public class PopulateAllTables {
                 " \n" + populateDrivingCourseStatus.getMessage());
         } else return "Populate Booking operations failed";
 
-        if (!populateDrivingCourseStatus.isStatus()) return "Populate DrivingCourse operations failed";
+        // Once driving courses are populated,
+        // 5. Populate InsuranceContract
+        PopulateStatus populateInsuranceContractStatus = null;
+        if (populateDrivingCourseStatus.isStatus()) {
+        populateInsuranceContractStatus = populateInsuranceContract.populateInsuranceContract(qty);
+            System.out.println("\nPopulate InsuranceContract operations: " + populateInsuranceContractStatus.getQty() +
+                "\n" + populateInsuranceContractStatus.getMessage());
+        } else return "Populate DrivingCourse operations failed";
+
+        if (!populateInsuranceContractStatus.isStatus()) return "Populate InsuranceContract operations failed";
 
     return "Populate All Tables operations completed successfully";
     }
