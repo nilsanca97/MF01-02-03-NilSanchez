@@ -80,7 +80,7 @@ public class PopulateInsuranceContract implements PopulateInsuranceContractServi
         RandomDates2025 randomDates2025 = new RandomDates2025();
 
         for (int i = 0; i < qty; i++) {
-            //String id = "IC" + String.format("%03d", i + 1);
+            String id = "IC" + String.format("%03d", i + 1);
 
             // Generate random contract date
             LocalDate startDate = randomDates2025.getStartDate();
