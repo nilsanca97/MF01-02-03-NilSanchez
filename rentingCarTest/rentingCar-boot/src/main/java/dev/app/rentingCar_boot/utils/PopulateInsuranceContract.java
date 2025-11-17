@@ -77,7 +77,7 @@ public class PopulateInsuranceContract implements PopulateInsuranceContractServi
     public List<InsuranceContract> generateInsuranceContracts(int qty) {
         List<InsuranceContract> generatedInsuranceContracts = new ArrayList<>();
         Random random = new Random();
-        RandomDates2025 randomDates2025 = new RandomDates2025();
+        RandomDates2025 randomDates2025 = new RandomDates2025().generateRandomDates2025();
 
         for (int i = 0; i < qty; i++) {
             String id = "IC" + String.format("%03d", i + 1);
