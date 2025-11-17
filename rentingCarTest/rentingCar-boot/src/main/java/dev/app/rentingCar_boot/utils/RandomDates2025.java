@@ -12,7 +12,7 @@ public class RandomDates2025 {
     public RandomDates2025() {}
 
     // Constructor que genera fechas aleatorias dentro de 2025
-    public void generateRandomDates2025() {
+    public RandomDates2025 generateRandomDates2025() {
         LocalDate startOfYear = LocalDate.of(2025, 1, 1);
         LocalDate endOfYear = LocalDate.of(2025, 12, 31);
 
@@ -20,10 +20,15 @@ public class RandomDates2025 {
         long maxDay = endOfYear.toEpochDay();
 
         long randomStartDay = ThreadLocalRandom.current().nextLong(minDay, maxDay + 1);
-        this.startDate = LocalDate.ofEpochDay(randomStartDay);
+        LocalDate startDate = LocalDate.ofEpochDay(randomStartDay);
 
         long randomEndDay = ThreadLocalRandom.current().nextLong(randomStartDay, maxDay + 1);
-            this.endDate = LocalDate.ofEpochDay(randomEndDay);
+        LocalDate endDate = LocalDate.ofEpochDay(randomEndDay);
+
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        return this;
     }
 
     // Getters y Setters
