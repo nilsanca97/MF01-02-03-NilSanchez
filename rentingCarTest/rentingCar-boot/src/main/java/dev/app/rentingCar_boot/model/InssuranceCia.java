@@ -118,8 +118,8 @@ public class InssuranceCia {
                 ", description='" + description + '\'' +
                 ", qtyEmployee=" + qtyEmployee +
                 ", isActive=" + isActive +
-                ", delegations= "+ delegations +
-                ", insuranceContracts= "+ insuranceContracts+
+                //", delegations= "+ delegations +
+                //", insuranceContracts= "+ insuranceContracts+
                 //", car= "+ cars +
                 '}';
     }
