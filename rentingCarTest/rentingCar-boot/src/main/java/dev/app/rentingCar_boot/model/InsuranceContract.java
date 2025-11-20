@@ -29,7 +29,7 @@ public class InsuranceContract {
         this.contractId = GenerateUUID.generateFourDigitUuid();
     }
 
-    public InsuranceContract(Car car, InssuranceCia insuranceCia, LocalDate startDate, LocalDate endDate ) {
+    public InsuranceContract(Car car, InssuranceCia inssuranceCia, LocalDate startDate, LocalDate endDate ) {
         this.contractId = GenerateUUID.generateFourDigitUuid();
         this.car = car;
         this.inssuranceCia = inssuranceCia;
@@ -82,10 +82,10 @@ public class InsuranceContract {
         return "InsuranceContract{" +
                 "contractId='" + contractId + '\'' +
                 //", car=" + (car != null ? car.getBrand() + " " + car.getModel() + " (" + car.getId() + ")" : "null") +
-                ", insuranceCia=" + (inssuranceCia != null ? inssuranceCia.getName()+ " "+ inssuranceCia.getDescription() + " (" + inssuranceCia.getId() + ")" : "null") +
+                ", insuranceCiaId=" + (inssuranceCia != null ? inssuranceCia.getId() : "null") +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                '}';
+                "}";
     }
     // helpers methods (optional)
 
