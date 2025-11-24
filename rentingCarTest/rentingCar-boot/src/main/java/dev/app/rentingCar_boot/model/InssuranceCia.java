@@ -27,11 +27,12 @@ public class InssuranceCia {
 
     // Implement @ElementCollection for Delegations in InsuranceCia
     @ElementCollection
-    @CollectionTable(name = "INSURANCECIA_DELEGATIONS",
-                    joinColumns = @JoinColumn(name = "INSURANCECIA_FK"))
+    @CollectionTable(name = "INSSURANCECIA_DELEGATIONS",
+                    joinColumns = @JoinColumn(name = "INSSURANCECIA_FK"))
     @Column (name = "DELEGATION")
     private List<String> delegations = new ArrayList<>();
 
+    // una inssuranceCia puede tener varios contractos
     @JsonManagedReference
     @OneToMany(mappedBy= "inssuranceCia", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<InsuranceContract> insuranceContracts = new ArrayList<>();

@@ -12,11 +12,13 @@ public class InsuranceContract {
     @Id
     private String contractId;
 
+    // parte Car (n:1)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CAR_FK")
     @JsonBackReference
     private Car car;
 
+    // parte InssuranceCia (n:1)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INSSURANCECIA_FK")
     @JsonBackReference

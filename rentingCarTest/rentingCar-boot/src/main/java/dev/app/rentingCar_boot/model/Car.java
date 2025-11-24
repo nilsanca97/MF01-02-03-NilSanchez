@@ -25,7 +25,8 @@ public class Car {
     private int year;
     private double price;
 
-    @JsonManagedReference
+    // un coche puede tener varios Contractos
+    @JsonManagedReference // evita recursion con InsuranceContract
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
